@@ -3,23 +3,30 @@
 
 Game::Game()
 {
-	obstacles = CreateObstacles();
-	aliens = CreateAliens();
+	obstacles = CreateObstacles(); // draws the obstacles
+	aliens = CreateAliens(); // draws the aliens
+	alienDirection = 1;
+	timeAlienFired = 0.0; // sets the time to 0
 }
 
 Game::~Game() {
-
+	Alien::UnloadImages();
 }
 
 void Game::Update() {
 	for (auto& laser : spaceship.lasers) {
 		laser.Update();
 	}
+	moveAliens(); // moves the aliens every frame
+	alienShoot(); // lets the aliens shoot
 
-	DeleteInactiveLasers();
+	for (auto& laser : alienLasers) {
+		laser.Update();
+	}
+	DeleteInactiveLasers(); // clears lasers
 }
 
-void Game::Draw() {
+void Game::Draw() { // function draws everything
 	spaceship.Draw();
 
 	for (auto& laser : spaceship.lasers) {
@@ -33,9 +40,12 @@ void Game::Draw() {
 	for (auto& alien: aliens) {
 		alien.Draw();
 	}
+	for (auto& laser : alienLasers) {
+		laser.Draw();
+	}
 }
 
-void Game::HandleInput() {
+void Game::HandleInput() { // moves or fires the spaceship
 	if (IsKeyDown(KEY_A)) {
 		spaceship.moveLeft();
 	}
@@ -55,9 +65,17 @@ void Game::DeleteInactiveLasers() {
 		else {
 			++it;
 		}
+	for (auto it = alienLasers.begin(); it != alienLasers.end();) {
+		if (!it->active) {
+			it = alienLasers.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 }
 
-std::vector<Obstacle> Game::CreateObstacles()
+std::vector<Obstacle> Game::CreateObstacles() // draws the obstacles
 {
 	int obstacleWidth = Obstacle::grid[0].size() * 3;
 	float gap = (GetScreenWidth() - (4 * obstacleWidth)) / 5;
@@ -69,7 +87,7 @@ std::vector<Obstacle> Game::CreateObstacles()
 	return obstacles;
 }
 
-std::vector<Alien> Game::CreateAliens()
+std::vector<Alien> Game::CreateAliens() // draws all the aliens in a grid
 {
 	std::vector<Alien> aliens;
 	for (int row = 0; row < 5; row++) {
@@ -92,4 +110,40 @@ std::vector<Alien> Game::CreateAliens()
 		}
 	}
 	return aliens;
+}
+
+void Game::moveAliens() { // moves the aliens
+	for (auto& alien : aliens) {
+		// make sure the aliens dont fly into space
+		if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth()) {
+			alienDirection = -1;
+		}
+		// make sure the aliens dont fly into space the other way
+		if (alien.position.x < 0) {
+			alienDirection = 1;
+			moveDownAliens(4);
+		}
+
+		alien.Update(alienDirection);
+	}
+}
+
+void Game::moveDownAliens(int distance)
+{
+	for (auto& alien : aliens) {
+		alien.position.y += distance;
+	}
+}
+
+void Game::alienShoot()
+{
+	// cool down bc shoot way too damn fast
+	double currentTime = GetTime();
+	if (currentTime - timeAlienFired >= alienShootInterval && !aliens.empty()) {
+		int randomIndex = GetRandomValue(0, aliens.size() - 1);
+		Alien& alien = aliens[randomIndex];
+		alienLasers.push_back(Laser({ alien.position.x + alien.alienImages[alien.type - 1].width / 2, alien.position.y + alien.alienImages[alien.type - 1].height }, 6));
+		timeAlienFired = GetTime(); 
+	}
+	
 }
