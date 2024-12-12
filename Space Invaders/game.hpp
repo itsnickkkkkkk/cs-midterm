@@ -23,5 +23,5 @@ class Game {
 		int alienDirection;
 		std::vector<Laser> alienLasers;
 		constexpr static float alienShootInterval = 0.35;
-		float timeAlienFired;
+		float timeAlienFired; // declare variable!!
 };
