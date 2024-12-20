@@ -159,7 +159,15 @@ void Game::alienShoot()
 {
 	// cool down bc shoot way too damn fast
 	double currentTime = GetTime();
-	if (currentTime - timeAlienFired >= alienShootInterval && !aliens.empty()) {
+	if (IsKeyDown(KEY_G)) {
+		secretMode = true;
+	}
+
+	if (secretMode) {
+		int randomIndex = GetRandomValue(0, aliens.size() - 1);
+		Alien& alien = aliens[randomIndex];
+		alienLasers.push_back(Laser({ alien.position.x + alien.alienImages[alien.type - 1].width / 2, alien.position.y + alien.alienImages[alien.type - 1].height }, 6));
+	} else if (currentTime - timeAlienFired >= alienShootInterval && !aliens.empty()) {
 		int randomIndex = GetRandomValue(0, aliens.size() - 1);
 		Alien& alien = aliens[randomIndex];
 		alienLasers.push_back(Laser({ alien.position.x + alien.alienImages[alien.type - 1].width / 2, alien.position.y + alien.alienImages[alien.type - 1].height }, 6));

@@ -15,6 +15,7 @@ class Game {
 		int lives;
 		int score;
 		int highScore;
+		bool secretMode;
 	private:
 		void DeleteInactiveLasers();
 		std::vector<Obstacle> CreateObstacles(); 
