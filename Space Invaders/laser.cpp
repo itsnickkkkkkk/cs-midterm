@@ -5,7 +5,7 @@ Laser::Laser(Vector2 position, int speed)
 {
 	this->position = position;
 	this->speed = speed;
-	active = true;
+	active = true; // sets laser to be active
 }
 
 void Laser::Draw() {
@@ -16,6 +16,7 @@ void Laser::Draw() {
 
 Rectangle Laser::getRect()
 {
+	// draw collision box around laser
 	Rectangle rect;
 	rect.x = position.x;
 	rect.y = position.y;
@@ -27,8 +28,9 @@ Rectangle Laser::getRect()
 void Laser::Update() {
 	position.y += speed; // laser shoot and go pew pew
 	if (active) {
+		// remove laser if off screen
 		if (position.y > GetScreenHeight() - 100 || position.y < 25) {
-			active = false;
+			active = false; 
 		}
 	}
 }

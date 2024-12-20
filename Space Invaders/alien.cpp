@@ -10,16 +10,16 @@ Alien::Alien(int type, Vector2 position)
 	if (alienImages[type - 1].id == 0) {
 		switch (type) {
 		case 1:
-			alienImages[0] = LoadTexture("Graphics/Alien1.png");
+			alienImages[0] = LoadTexture("Graphics/Alien1.png"); // loads first row
 			break;
 		case 2:
-			alienImages[1] = LoadTexture("Graphics/Alien2.png");
+			alienImages[1] = LoadTexture("Graphics/Alien2.png"); // loads second
 			break;
 		case 3:
-			alienImages[2] = LoadTexture("Graphics/Alien3.png");
+			alienImages[2] = LoadTexture("Graphics/Alien3.png"); // loads third row
 			break;
 		default:
-			alienImages[0] = LoadTexture("Graphics/Alien1.png");
+			alienImages[0] = LoadTexture("Graphics/Alien1.png"); // default row to first 
 			break;
 		}
 	}
@@ -35,7 +35,7 @@ void Alien::Draw() {
 }
 
 int Alien::GetType() {
-	return type;
+	return type; // which alien is in
 }
 
 void Alien::UnloadImages()
@@ -47,5 +47,6 @@ void Alien::UnloadImages()
 
 Rectangle Alien::getRect()
 {
-	return { position.x, position.y, float(alienImages[type - 1].width), float(alienImages[type - 1].height) };
+	// draw the collision box around alien
+	return { position.x, position.y, float(alienImages[type - 1].width), float(alienImages[type - 1].height) }; 
 };

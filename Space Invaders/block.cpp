@@ -11,6 +11,7 @@ void Block::Draw() {
 
 Rectangle Block::getRect()
 {
+	// make laser hit the block
 	Rectangle rect;
 	rect.x = position.x;
 	rect.y = position.y;

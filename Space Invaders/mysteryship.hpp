@@ -8,10 +8,10 @@ public:
 	void Update();
 	void Draw();
 	void Spawn();
-	Rectangle getRect();
-	bool living;
+	Rectangle getRect(); // collision
+	bool living; // check if mysteryship is spawned in
 private:
 	Vector2 position;
 	Texture2D image;
-	int speed;
+	int speed; // speed of the ship
 };

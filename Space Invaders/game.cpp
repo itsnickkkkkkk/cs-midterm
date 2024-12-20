@@ -4,7 +4,7 @@
 
 Game::Game()
 {
-	InitializeGame();
+	InitializeGame(); // draw the game
 }
 
 Game::~Game() {
@@ -12,15 +12,15 @@ Game::~Game() {
 }
 
 void Game::Update() {
-	if (run) {
+	if (run) { // if user is alive
 		double currentTime = GetTime();
-		if (currentTime - timeLastSpawn > mystertyShipSpawn) {
+		if (currentTime - timeLastSpawn > mystertyShipSpawn) { // mystery ship random spawn 
 			mysteryship.Spawn();
 			timeLastSpawn = GetTime();
 			mystertyShipSpawn = GetRandomValue(10, 20);
 		}
 
-		for (auto& laser : spaceship.lasers) {
+		for (auto& laser : spaceship.lasers) { 
 			laser.Update();
 		}
 		moveAliens(); // moves the aliens every frame
@@ -31,10 +31,10 @@ void Game::Update() {
 		}
 		DeleteInactiveLasers(); // clears lasers
 		mysteryship.Update();
-		CollisionCheck();
+		CollisionCheck(); // check for collisions
 	}
 	else {
-		if (IsKeyDown(KEY_ENTER)) {
+		if (IsKeyDown(KEY_ENTER)) { // restart game function
 			Restart();
 			InitializeGame();
 		}
@@ -77,7 +77,7 @@ void Game::HandleInput() { // moves or fires the spaceship
 	}
 }
 
-void Game::DeleteInactiveLasers() {
+void Game::DeleteInactiveLasers() { // remove extra laser
 	for (auto it = spaceship.lasers.begin(); it != spaceship.lasers.end();)
 		if (!it->active) {
 			it = spaceship.lasers.erase(it);
@@ -162,7 +162,7 @@ void Game::alienShoot()
 	if (IsKeyDown(KEY_G)) {
 		secretMode = true;
 	}
-
+	// disable cooldown for funsies
 	if (secretMode) {
 		int randomIndex = GetRandomValue(0, aliens.size() - 1);
 		Alien& alien = aliens[randomIndex];
@@ -182,6 +182,7 @@ void Game::CollisionCheck()
 	for (auto& laser : spaceship.lasers) {
 		auto it = aliens.begin();
 		while (it != aliens.end()) {
+			// score when kill alien woohoo
 			if (CheckCollisionRecs(it->getRect(), laser.getRect())) {
 				if (it->type == 1) {
 					score += 100;
@@ -193,7 +194,7 @@ void Game::CollisionCheck()
 					score += 300;
 				}
 				
-				highScoreCheck();
+				highScoreCheck(); // checks if score is higher than high
 
 				it = aliens.erase(it);
 				laser.active = false;
@@ -203,7 +204,7 @@ void Game::CollisionCheck()
 			}
 		}
 		
-		for (auto& obstacle : obstacles) {
+		for (auto& obstacle : obstacles) { // checks if laser hits the shield 
 			auto it = obstacle.blocks.begin();
 			while (it != obstacle.blocks.end()) {
 				if (CheckCollisionRecs(it->getRect(), laser.getRect())) {
@@ -216,24 +217,24 @@ void Game::CollisionCheck()
 			}
 		}
 
-		if (CheckCollisionRecs(mysteryship.getRect(), laser.getRect())) {
-			mysteryship.living = false;
-			laser.active = false;
-			score += 500;
-			highScoreCheck();
+		if (CheckCollisionRecs(mysteryship.getRect(), laser.getRect())) {  // checks if laser hits the mystery
+			mysteryship.living = false; // removes the ship
+			laser.active = false; // disable the laser
+			score += 500; // scores
+			highScoreCheck(); // checks high score
 		}
 	}
 	// bad guy beam
 	for (auto& laser : alienLasers) {
-		if (CheckCollisionRecs(laser.getRect(), spaceship.getRect())) {
-			laser.active = false;
-			lives --;
+		if (CheckCollisionRecs(laser.getRect(), spaceship.getRect())) { // if alien hit player
+			laser.active = false; // disable laser
+			lives --; // remove a life
 			if (lives == 0) {
-				YouLose();
+				YouLose(); // game over gg
 			}
 		}
 
-		for (auto& obstacle : obstacles) {
+		for (auto& obstacle : obstacles) { // alien laser collide with barrier
 			auto it = obstacle.blocks.begin();
 			while (it != obstacle.blocks.end()) {
 				if (CheckCollisionRecs(it->getRect(), laser.getRect())) {
@@ -253,8 +254,8 @@ void Game::CollisionCheck()
 		for (auto& obstacle : obstacles) {
 			auto it = obstacle.blocks.begin();
 			while (it != obstacle.blocks.end()) {
-				if (CheckCollisionRecs(it->getRect(), alien.getRect())) {
-					it = obstacle.blocks.erase(it);
+				if (CheckCollisionRecs(it->getRect(), alien.getRect())) { // if aliens themselves hit the block
+					it = obstacle.blocks.erase(it); // remove all the blocks that collide
 				}
 				else {
 					it++;
@@ -267,6 +268,7 @@ void Game::CollisionCheck()
 
 void Game::highScoreCheck()
 {
+	// set a new high score
 	if (score > highScore) {
 		highScore = score;
 		saveScore(highScore);
@@ -275,6 +277,7 @@ void Game::highScoreCheck()
 
 void Game::saveScore(int highScore)
 {
+	// save high score to a file
 	std::ofstream highScoreFile("highscore.txt");
 	if (highScoreFile.is_open()) {
 		highScoreFile << highScore;
@@ -287,10 +290,11 @@ void Game::saveScore(int highScore)
 
 int Game::loadScore()
 {
-	int loadedScore = 0;
-	std::ifstream highScoreFile("highscore.txt");
+	// load the new highscore
+	int loadedScore = 0; // initialize
+	std::ifstream highScoreFile("highscore.txt"); // open the file
 	if (highScoreFile.is_open()) {
-		highScoreFile >> loadedScore;
+		highScoreFile >> loadedScore; 
 		highScoreFile.close();
 	}
 	else {
@@ -301,15 +305,15 @@ int Game::loadScore()
 
 void Game::YouLose()
 {
-	run = false;
+	run = false; // turn off the game
 }
 
 void Game::Restart()
 {
-	spaceship.Restart();
-	aliens.clear();
-	alienLasers.clear();
-	obstacles.clear();
+	spaceship.Restart(); // resets position
+	aliens.clear(); // resets aliens
+	alienLasers.clear(); // removes lasers
+	obstacles.clear(); // removes obstacles
 }
 
 void Game::InitializeGame()
@@ -318,10 +322,10 @@ void Game::InitializeGame()
 	aliens = CreateAliens(); // draws the aliens
 	alienDirection = 1;
 	timeAlienFired = 0.0; // sets the time to 0
-	timeLastSpawn = 0.0;
+	timeLastSpawn = 0.0; // mysteryship spawn
 	mystertyShipSpawn = GetRandomValue(10, 20);
-	lives = 3;
-	score = 0;
-	run = true;
+	lives = 3; // set to 3 lives
+	score = 0; // initialize score
+	run = true; // set game running
 	highScore = loadScore();
 }

@@ -31,6 +31,7 @@ void MysteryShip::Spawn() {
 
 Rectangle MysteryShip::getRect()
 {
+	// collision
 	if (living) {
 		return { position.x, position.y, float(image.width), float(image.height) };
 	}
@@ -41,9 +42,9 @@ Rectangle MysteryShip::getRect()
 
 void MysteryShip::Update() {
 	if (living) {
-		position.x += speed;
+		position.x += speed; // move it move it
 		if (position.x > GetScreenWidth() - image.width - 25 || position.x < 25) {
-			living = false;
+			living = false; // remove if it goes off screen
 		}
 	}
 }

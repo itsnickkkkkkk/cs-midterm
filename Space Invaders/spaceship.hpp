@@ -8,14 +8,14 @@ class Spaceship {
 		Spaceship();
 		~Spaceship();
 		void Draw();
-		void moveLeft();
-		void moveRight();
-		void fireLaser();
-		Rectangle getRect();
-		void Restart();
+		void moveLeft(); // move the ship left
+		void moveRight(); // move the ship right
+		void fireLaser(); // pew pew
+		Rectangle getRect(); // collision box
+		void Restart(); // restarting game
 		std::vector<Laser> lasers;
 	private:
 		Texture2D image;
 		Vector2 position;
-		double lastFireTime;
+		double lastFireTime; // user cooldown
 };

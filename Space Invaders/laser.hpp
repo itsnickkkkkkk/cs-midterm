@@ -6,9 +6,9 @@ class Laser {
 		Laser(Vector2 position, int speed);
 		void Update();
 		void Draw();
-		Rectangle getRect();
+		Rectangle getRect(); //collisions
 		bool active;
 	private:
 		Vector2 position;
-		int speed;
+		int speed; // speed of laser
 };
