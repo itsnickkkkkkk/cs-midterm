@@ -10,16 +10,16 @@ Alien::Alien(int type, Vector2 position)
 	if (alienImages[type - 1].id == 0) {
 		switch (type) {
 		case 1:
-			alienImages[0] = LoadTexture("Graphics/alien_1.png");
+			alienImages[0] = LoadTexture("Graphics/Alien1.png");
 			break;
 		case 2:
-			alienImages[1] = LoadTexture("Graphics/alien_2.png");
+			alienImages[1] = LoadTexture("Graphics/Alien2.png");
 			break;
 		case 3:
-			alienImages[2] = LoadTexture("Graphics/alien_3.png");
+			alienImages[2] = LoadTexture("Graphics/Alien3.png");
 			break;
 		default:
-			alienImages[0] = LoadTexture("Graphics/alien_1.png");
+			alienImages[0] = LoadTexture("Graphics/Alien1.png");
 			break;
 		}
 	}
@@ -44,3 +44,8 @@ void Alien::UnloadImages()
 		UnloadTexture(alienImages[i]);
 	}
 }
+
+Rectangle Alien::getRect()
+{
+	return { position.x, position.y, float(alienImages[type - 1].width), float(alienImages[type - 1].height) };
+};

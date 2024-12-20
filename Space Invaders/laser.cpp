@@ -10,14 +10,24 @@ Laser::Laser(Vector2 position, int speed)
 
 void Laser::Draw() {
 	if (active) {
-		DrawRectangle(position.x, position.y, 4, 15, { 122, 255, 0,255 }); // draws the laser 
+		DrawRectangle(position.x, position.y, 4, 15, { 255, 255, 255 ,255 }); // draws the laser 
 	}
+}
+
+Rectangle Laser::getRect()
+{
+	Rectangle rect;
+	rect.x = position.x;
+	rect.y = position.y;
+	rect.width = 4;
+	rect.height = 15;
+	return rect;
 }
 
 void Laser::Update() {
 	position.y += speed; // laser shoot and go pew pew
 	if (active) {
-		if (position.y > GetScreenHeight() || position.y < 0) {
+		if (position.y > GetScreenHeight() - 100 || position.y < 25) {
 			active = false;
 		}
 	}

@@ -6,5 +6,15 @@ Block::Block(Vector2 position)
 }
 
 void Block::Draw() {
-	DrawRectangle(position.x, position.y, 3, 3, { 122, 255, 0, 255 });
+	DrawRectangle(position.x, position.y, 3, 3, { 255, 255, 255, 255 });
+}
+
+Rectangle Block::getRect()
+{
+	Rectangle rect;
+	rect.x = position.x;
+	rect.y = position.y;
+	rect.width = 3;
+	rect.height = 3;
+	return rect;
 }
